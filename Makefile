@@ -52,10 +52,13 @@ LINKER_FLAGS = -lstdc++exp
 #LINKER_FLAGS = -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 
 # Windows LINKER_FLAGS, Om SDL3 används! 
-#LINKER_FLAGS = -lmingw32 -lstdc++exp -lSDL3 -lSDL3_image -lSDL3_ttf
+LINKER_FLAGS = -lmingw32 -lstdc++exp -lSDL3 -lSDL3_image -lSDL3_ttf
 # Windows LINKER_FLAGS, Om SDL2 används! 
 #LINKER_FLAGS = -lmingw32 -lstdc++exp -lSDL2main -lSDL2 -lSDL2_image -lSDL2_mixer -lSDL2_ttf
 
 
-all:
+all: $(BUILD_DIR)
 	$(CC) $(COMPILER_FLAGS) $(INCLUDE_PATHS) $(LIBRARY_PATHS) $(SRC_FILES) $(LINKER_FLAGS) -o $(BUILD_DIR)/$(OBJ_NAME)
+
+$(BUILD_DIR):
+	mkdir -p $(BUILD_DIR)
