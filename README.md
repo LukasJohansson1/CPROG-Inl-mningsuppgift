@@ -1,3 +1,3 @@
 För att exekvera kör:
-make
+make   ->
 build/debug/play
