@@ -3,15 +3,11 @@
 
 
 Sprite::Sprite(float x, float y, float w, float h, SDL_Color color)
-    : x(x), y(y), width(w), height(h), color(color) {}
+    : x(x), y(y), width(w), height(h), color(color), alive(true) {}
 
 Sprite::~Sprite() {}
 
 void Sprite::tick() {
-
-    if(x<0 || x>800) {
-        x+=1; // Move right each tick
-    } 
 }
 
 void Sprite::draw(SDL_Renderer* renderer) {

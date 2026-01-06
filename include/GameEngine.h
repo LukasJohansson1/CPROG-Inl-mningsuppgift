@@ -4,6 +4,8 @@
 #include <memory>
 #include "Sprite.h"
 #include "Constants.h"
+#include "Player.h"
+#include "Projectile.h"
 
 
 class GameEngine {

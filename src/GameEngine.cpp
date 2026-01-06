@@ -67,11 +67,27 @@ void GameEngine::run(){
         SDL_Event event;
         while(SDL_PollEvent(&event)) {
             if(event.type == SDL_EVENT_QUIT) running = false;
+
+            if(event.type == SDL_EVENT_MOUSE_BUTTON_DOWN) {
+                if(event.button.button == SDL_BUTTON_LEFT) {
+                    for (auto& sprite : sprites) {
+                        if(auto player = std::dynamic_pointer_cast<Player>(sprite)) {
+                            float projSpeed = 4.0f;
+                            float speedX = (player->getLastDirection() == Direction::LEFT ? -projSpeed : projSpeed);
+
+                            auto proj = std::make_shared<Projectile>(player->getX()+ player->getWidth()/2 -5, player->getY() + player->getHeight()/2 -5, speedX, 0.0f);
+                            addSprite(proj);
+                        }
+                    }
+                }
+            }
         }
 
         for (auto& sprite : sprites) {
             sprite->tick();
         }
+
+        sprites.erase(std::remove_if(sprites.begin(), sprites.end(), [](const std::shared_ptr<Sprite>& s){return !s->isAlive();}), sprites.end());
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Svart backgrund
         SDL_RenderClear(renderer);
