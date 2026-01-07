@@ -79,7 +79,7 @@ void GameEngine::run(){
                 if(event.button.button == SDL_BUTTON_LEFT) {
                     for (auto& sprite : sprites) {
                         if(auto player = std::dynamic_pointer_cast<Player>(sprite)) {
-                            float projSpeed = 4.0f;
+                            float projSpeed = 6.0f;
                             float speedX = (player->getLastDirection() == Direction::LEFT ? -projSpeed : projSpeed);
 
                             auto proj = std::make_shared<Projectile>(player->getX()+ player->getWidth()/2 -5, player->getY() + player->getHeight()/2 -5, speedX, 0.0f);

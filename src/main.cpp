@@ -11,10 +11,10 @@ int main() {
 	auto player = std::make_shared<Player>(100,100);
 	engine.addSprite(player);
 
-	engine.addSprite(std::make_shared<Ledge>(100, 350, 200, 20));
-	engine.addSprite(std::make_shared<Ledge>(400, 280, 180, 20));
-	engine.addSprite(std::make_shared<Ledge>(200, 200, 150, 20));
-	engine.addSprite(std::make_shared<Ledge>(500, 450, 150, 20));
+	engine.addSprite(std::make_shared<Ledge>(100, 450, 200, 20));
+	engine.addSprite(std::make_shared<Ledge>(400, 380, 180, 20));
+	engine.addSprite(std::make_shared<Ledge>(650, 400, 150, 20));
+	engine.addSprite(std::make_shared<Ledge>(550, 640, 150, 20));
 
 
 
