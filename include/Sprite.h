@@ -17,6 +17,10 @@ public:
 
     void destroy(){alive = false;} // alive = inside of the screen
 
+    SDL_FRect getRect() const {
+        return SDL_FRect{x,y,width,height};
+    }
+
 protected:
     float x, y;
     float width, height;

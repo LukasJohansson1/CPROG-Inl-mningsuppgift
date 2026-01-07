@@ -6,6 +6,7 @@
 #include "Constants.h"
 #include "Player.h"
 #include "Projectile.h"
+#include "Ledge.h"
 
 
 class GameEngine {

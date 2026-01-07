@@ -46,6 +46,9 @@ bool GameEngine::init() {
         return false;
     }
 
+    auto ground = std::make_shared<Ledge>(0.0f,constants::gScreenHeight - 2.0f,constants::gScreenWidth,2.0f); // Small ledge at the bottom
+    addSprite(ground);
+
     return true;
 }
 
@@ -55,6 +58,10 @@ void GameEngine::addSprite(std::shared_ptr<Sprite> sprite) {
 
 void GameEngine::removeSprite(std::shared_ptr<Sprite> sprite) {
     sprites.erase(std::remove(sprites.begin(), sprites.end(), sprite), sprites.end());
+}
+
+bool intersects(const SDL_FRect& a, const SDL_FRect& b) {
+    return( a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y);
 }
 
 void GameEngine::run(){
@@ -87,9 +94,43 @@ void GameEngine::run(){
             sprite->tick();
         }
 
-        sprites.erase(std::remove_if(sprites.begin(), sprites.end(), [](const std::shared_ptr<Sprite>& s){return !s->isAlive();}), sprites.end());
+        for(auto& sprite : sprites) {
+            if(auto player = std::dynamic_pointer_cast<Player>(sprite)){
+                player->setOnGround(false);
 
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255); // Svart backgrund
+                SDL_FRect p = player->getRect();
+
+                for(auto& other : sprites) {
+                    if(auto ledge = std::dynamic_pointer_cast<Ledge>(other)) {
+                        SDL_FRect l = ledge->getRect();
+
+                        if(intersects(p,l)){ // Collision from left
+                            if(player->getVelocityX() > 0 && p.x + p.w - player->getVelocityX() <= l.x) {
+                                player->setX(l.x - p.w);
+                            }
+
+                            else if(player->getVelocityX() < 0 && p.x -player->getVelocityX() >= l.x + l.w) {
+                                player->setX(l.x + l.w);
+                            }
+                        }
+
+
+                        bool horizontalOverlap = p.x + p.w > l.x && p.x < l.x + l.w;
+
+                        if(horizontalOverlap && player->getVelocityY() >= 0 && p.y + p.h <= l.y && p.y + p.h + player->getVelocityY() >= l.y) {{
+                            player->setY(l.y - p.h);
+                            player->setVelocityY(0);
+                            player->setOnGround(true);
+                        }
+                        }
+                    }
+                }
+            }
+        }
+
+        sprites.erase(std::remove_if(sprites.begin(), sprites.end(), [](const std::shared_ptr<Sprite>& s){return !s->isAlive();}), sprites.end()); // påminn ändra till spriteRemove
+
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
         SDL_RenderTexture(renderer, bgtexture, nullptr, nullptr);
