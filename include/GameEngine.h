@@ -41,4 +41,13 @@ private:
     // Spawn-funktioner
     void spawnEnemy();
     void spawnLedge();
+
+    void handlePlayerLedgeCollisions();
+    void handlePlayerEnemyCollisions(bool& running);
+    void handlePlayerProjectileEnemyCollisions();
+    void updateCameraAndGround();
+    bool handleEvents();
+    void regeneratePlayerHealth(float amount);
+    void showHealthBar();
+    void render();
 };
