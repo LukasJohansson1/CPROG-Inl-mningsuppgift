@@ -1,3 +1,5 @@
+//  SPEL Klass
+
 #include "Player.h"
 #include <SDL3/SDL.h>
 #include "Constants.h"
@@ -23,9 +25,6 @@ void Player::tick() {
 
     x += velocityX;
     y += velocityY;
-
-
-
 
     if (x < 0) x = 0;
     if (y < 0) y = 0;

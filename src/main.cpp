@@ -1,19 +1,13 @@
-#include "GameEngine.h"
-#include "Sprite.h"
-#include "Constants.h"
-#include <memory>
-#include "Player.h"
+// SPELKlass
+
+#include "Game.h"
 
 int main() {
-	GameEngine engine(60);
-	if (!engine.init()) return 1;
+	Game game(60);
+	if (!game.init()) {
+		return 1;
+	}
 
-	auto player = std::make_shared<Player>(100,100);
-	engine.addSprite(player);
-
-
-	engine.run();
+	game.run();
 	return 0;
-
-	
 }

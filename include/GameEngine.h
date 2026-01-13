@@ -2,13 +2,9 @@
 #include <SDL3/SDL.h>
 #include <vector>
 #include <memory>
+#include <functional>
 #include "Sprite.h"
 #include "Constants.h"
-#include "Player.h"
-#include "Projectile.h"
-#include "Ledge.h"
-#include "Enemy.h"
-
 
 class GameEngine {
 
@@ -19,8 +15,18 @@ public:
     bool init();
     void run();
 
+    // Sprite hantering
     void addSprite(std::shared_ptr<Sprite> sprite);
     void removeSprite(std::shared_ptr<Sprite> sprite);
+    const std::vector<std::shared_ptr<Sprite>>& getAllSprites() const { return sprites; }
+
+    // Callback för speluppdatering
+    using GameUpdateCallback = std::function<void(bool&)>;
+    void setGameUpdateCallback(GameUpdateCallback callback) { gameUpdateCallback = callback; }
+
+    // Rendering tillgång för spelklassen
+    SDL_Renderer* getRenderer() const { return renderer; }
+    float getCameraX() const { return cameraX; }
 
 private:
     int fps;
@@ -30,24 +36,10 @@ private:
     std::vector<std::shared_ptr<Sprite>> sprites;
     float cameraX = 0.0f;
 
-    // spawn timers
-    Uint64 lastLedgeSpawn = 0;
-    Uint64 lastEnemySpawn = 0;
+    GameUpdateCallback gameUpdateCallback;
 
-    // Position för senaste ledge
-    float lastLedgeX = constants::gScreenWidth - 1100;
-    float lastLedgeY = constants::gScreenHeight - 2.0f;
-
-    // Spawn-funktioner
-    void spawnEnemy();
-    void spawnLedge();
-
-    void handlePlayerLedgeCollisions();
-    void handlePlayerEnemyCollisions(bool& running);
-    void handlePlayerProjectileEnemyCollisions();
     void updateCameraAndGround();
     bool handleEvents();
-    void regeneratePlayerHealth(float amount);
     void showHealthBar();
     void render();
 };

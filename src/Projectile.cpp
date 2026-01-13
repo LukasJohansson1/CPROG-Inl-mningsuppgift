@@ -1,3 +1,5 @@
+// SPEL Klass
+
 #include "Projectile.h"
 #include "Constants.h"
 
