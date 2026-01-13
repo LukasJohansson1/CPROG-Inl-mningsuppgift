@@ -15,7 +15,7 @@ bool Game::init() {
     if (!engine->init()) {
         return false;
     }
-    // Skapa spelaren
+    // Skapa player
     player = std::make_shared<Player>(100, 100);
     engine->addSprite(player);
     // Skapa marken
@@ -46,6 +46,7 @@ void Game::spawnLedge() {
     constexpr float ledgeHeight = 15.0f;
     float x_lower = lastLedgeX + 100.0f + static_cast<float>(rand()) / RAND_MAX * 120.0f;
     float y_lower = constants::gScreenHeight - 150.0f + static_cast<float>(rand()) / RAND_MAX * 50.0f;
+    // Se till att plattformen inte är för hög eller låg
     engine->addSprite(std::make_shared<Ledge>(x_lower, y_lower, ledgeWidth, ledgeHeight));
     float x_upper = x_lower + 80.0f + static_cast<float>(rand()) / RAND_MAX * 60.0f;
     float y_upper = constants::gScreenHeight / 3.0f + static_cast<float>(rand()) / RAND_MAX * (constants::gScreenHeight / 3.0f);
@@ -66,7 +67,7 @@ void Game::spawnLedge() {
     }
 }
 
-// Hanterar kollision mellan spelare och plattformar
+// Hanterar kollision mellan spelare och ledges
 void Game::handlePlayerLedgeCollisions() {
     if (!player) return;
     player->setOnGround(false);
@@ -94,7 +95,7 @@ void Game::handlePlayerLedgeCollisions() {
     }
 }
 
-// Hanterar kollision mellan spelare och fiender
+// Hanterar kollision mellan player och enemy
 void Game::handlePlayerEnemyCollisions(bool& running) {
     if (!player) return;
     SDL_FRect p = player->getRect();
@@ -105,13 +106,13 @@ void Game::handlePlayerEnemyCollisions(bool& running) {
                 player->takeDamage(60);
                 player->setHealth(std::clamp(player->getHealth(), 0.0f, 100.0f));
                 enemy->destroy();
-                // Visa Game Over-ruta om spelaren dör
+                // Visa Game Over ruta om spelaren dör
                 if (player->getHealth() <= 0.0f) {
-                    SDL_ShowSimpleMessageBox(
-                        SDL_MESSAGEBOX_INFORMATION,
-                        "Game Over",
+                    SDL_ShowSimpleMessageBox( // Vet inte helt om detta ränkas som att använda SDL
+                        SDL_MESSAGEBOX_INFORMATION, // men hitta inget bättre sätt att göra en window som är oberoende på platform
+                        "Game Over", // du skulle kunna använda windows.h men det fungerar inte på linux/mac
                         "Du dog!",
-                        nullptr // Använd nullptr för window
+                        nullptr
                     );
                     running = false;
                     return;
@@ -121,7 +122,7 @@ void Game::handlePlayerEnemyCollisions(bool& running) {
     }
 }
 
-// Hanterar kollision mellan projektiler och fiender
+// Hanterar kollision mellan projektiler och enemy
 void Game::handlePlayerProjectileEnemyCollisions() {
     auto allSprites = engine->getAllSprites();
     for (auto& sprite : allSprites) {
@@ -139,17 +140,17 @@ void Game::handlePlayerProjectileEnemyCollisions() {
     }
 }
 
-// Regenererar spelarens hälsa
+// Regenererar player health
 void Game::regeneratePlayerHealth(float amount) {
     if (player) {
         player->regenerateHealth(amount);
     }
 }
 
-// Uppdaterar all spellogik varje frame
+// Uppdaterar spellogik varje frame
 void Game::updateGameLogic(bool& running) {
     Uint64 now = SDL_GetTicks();
-    // Spawnar fiender varannan sekund
+    // Spawnar enemies varannan sekund
     if (now - lastEnemySpawn >= 2000) {
         lastEnemySpawn = now;
         spawnEnemy();
