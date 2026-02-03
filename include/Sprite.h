@@ -4,7 +4,14 @@
 class Sprite {
 public:
     Sprite(float x, float y, float w, float h, SDL_Color color);
-    virtual ~Sprite();
+    virtual ~Sprite() = default; // Tillägg av värdesemantik
+
+    Sprite(const Sprite&) = delete;
+    Sprite& operator=(const Sprite&) = delete;
+    Sprite(Sprite&&) = delete;
+    Sprite& operator=(Sprite&&) = delete;
+
+
 
     virtual void tick();
     virtual void draw(SDL_Renderer* renderer);

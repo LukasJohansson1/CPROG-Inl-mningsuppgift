@@ -5,7 +5,6 @@
 Sprite::Sprite(float x, float y, float w, float h, SDL_Color color)
     : x(x), y(y), width(w), height(h), color(color), alive(true) {}
 
-Sprite::~Sprite() {}
 
 void Sprite::tick() {
 }
